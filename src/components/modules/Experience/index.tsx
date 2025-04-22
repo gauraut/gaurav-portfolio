@@ -16,7 +16,7 @@ export default function Experience() {
       {/* Symlink‑style Experience Header */}
       <div className="flex items-center space-x-2 mb-6 text-3xl md:text-4xl -translate-y-15">
         <span className="text-white font-bold">./Gaurav_Raut</span>
-        <span className="text-red-500"> -> </span>
+        <span className="text-red-500"> -{'>'} </span>
         <span className="text-green-500 font-bold">./Experience</span>
       </div>
 

@@ -28,9 +28,9 @@ export const metadata: Metadata = {
     type: 'website',
   },
   icons: {
-    icon: '/assets/favicon/favicon-32x32.png',
-    shortcut: '/assets/favicon/favicon.ico',
-    apple: '/assets/favicon/apple-touch-icon.png',
+    icon: 'gr_32.png',
+    shortcut: '/gr.ico',
+    apple: 'gr_32.png',
   },
   twitter: {
     card: 'summary_large_image',

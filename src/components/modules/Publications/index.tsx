@@ -17,7 +17,7 @@ export default function Publications() {
     <motion.section
       id="publications"
       className="py-5 px-4 sm:px-6 md:px-12 text-white font-mono"
-			style={{ backgroundColor: '#351100' }}
+			style={{ backgroundColor: '#5A0007' }}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

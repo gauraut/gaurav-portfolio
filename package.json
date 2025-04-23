@@ -24,6 +24,7 @@
     "react-dom": "19.0.0",
     "react-google-recaptcha": "^2.1.0",
     "react-simple-typewriter": "^5.0.1",
+    "redis": "^4.7.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.3.0",
     "yup": "^1.2.0"

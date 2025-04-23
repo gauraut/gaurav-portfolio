@@ -100,7 +100,7 @@ export default function HomePage() {
         <Projects />
       </div>
 
-      {/* ===== GitHub Link ===== */}
+      {/* ===== GitHub Link =====
       <section className="py-6 text-center px-4 sm:px-6 md:px-8 lg:px-12">
         <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
           My GitHub
@@ -116,7 +116,7 @@ export default function HomePage() {
             GitHub
           </a>.
         </p>
-      </section>
+      </section> */}
 
       <Skills />
       <Contact />

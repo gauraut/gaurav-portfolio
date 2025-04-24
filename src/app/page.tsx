@@ -98,6 +98,7 @@ export default function HomePage() {
         <Experience />
         <Publications />
         <Projects />
+				<Skills />
       </div>
 
       {/* ===== GitHub Link =====
@@ -118,9 +119,9 @@ export default function HomePage() {
         </p>
       </section> */}
 
-      <Skills />
+      
       <Contact />
-      <Footer />
+      {/* <Footer /> */}
     </AllProviders>
   )
 }

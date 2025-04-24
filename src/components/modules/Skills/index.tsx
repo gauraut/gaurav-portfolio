@@ -7,21 +7,15 @@ export default function Skills() {
 	const categories = [
 		{
 			title: 'Programming Languages',
-			items: ['C++', 'Python', 'TypeScript / JavaScript', 'Bash']
+			items: ['C++ (Strongest)', 'Python (Strongest)', 'TypeScript', 'Bash']
 		},
 		{
 			title: 'Frameworks & Libraries',
 			items: [
 				'PyTorch · TensorFlow · OpenCV',
 				'ROS 2 · PCL · cuPCL',
-				'CUDA · TensorRT · ONNX Runtime'
-			]
-		},
-		{
-			title: 'Data & Analytics',
-			items: [
-				'Power BI · DAX · Snowflake',
-				'SQL · ETL Pipelines · Minitab'
+				'CUDA · TensorRT · ONNX Runtime',
+				'Open3D'
 			]
 		},
 		{
@@ -33,15 +27,20 @@ export default function Skills() {
 			]
 		},
 		{
-			title: 'Web & UI',
-			items: ['Next.js · React · Tailwind CSS', 'Framer Motion · Three.js / WebGL']
+			title: 'Machine Learning Expertise',
+			items: [
+				'Object Detection · Segmentation · Tracking',
+				'Multi-modal (RGB + LiDAR) · Generative Models · VLM',
+				'CNN · Transformers (ViT) · U-Net'
+			]
 		}
 	]
 
 	return (
 		<motion.section
 			id="skills"
-			className="py-12 px-4 sm:px-6 md:px-24 bg-gray-900 text-white font-mono"
+			className="py-5 px-4 text-white font-mono"
+			style={{backgroundColor: '#623A00'}}
 			initial={{ opacity: 0, y: 50 }}
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true }}

@@ -8,8 +8,8 @@ const Contact = () => (
     </div>
     <div className="flex-none w-full lg:w-auto lg:flex-1 order-1 lg:order-2 mb-8 lg:mb-0">
       <Image
-        src="/assets/illustrations/contact.svg"
-        alt="I’m John and I’m a Backend & Devops engineer!"
+        src="/cv_model.svg"
+        alt="I’m Gaurav, a visionary!"
         className="w-auto h-auto"
         width={498}
         height={313}

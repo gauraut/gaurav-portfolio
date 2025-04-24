@@ -7,7 +7,7 @@ export default function Projects() {
   return (
     <motion.section
       id="projects"
-      className="py-12 px-4 sm:px-6 md:px-24 text-white font-mono"
+      className="py-5 px-4 sm:px-6 md:px-24 text-white font-mono"
 			style={{backgroundColor: '#074F00'}}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}

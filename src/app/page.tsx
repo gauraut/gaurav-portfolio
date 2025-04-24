@@ -121,7 +121,7 @@ export default function HomePage() {
 
       
       <Contact />
-      {/* <Footer /> */}
+      <Footer />
     </AllProviders>
   )
 }

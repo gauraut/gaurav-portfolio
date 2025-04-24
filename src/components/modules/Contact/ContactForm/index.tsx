@@ -1,123 +1,98 @@
 'use client';
 
 import { useForm } from '@formspree/react';
-import clsx from 'clsx';
-import { Formik, Form, FastField, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import dynamic from 'next/dynamic';
 import * as Yup from 'yup';
-import Recaptcha from 'react-google-recaptcha';
+import clsx from 'clsx';
+
+// 👉 dynamic import prevents SSR errors
+const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), { ssr: false });
 
 const ContactForm = () => {
-  const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORM as string);
+  const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORM!);
 
   return (
     <Formik
-      initialValues={{
-        name: '',
-        email: '',
-        message: '',
-        recaptcha: '',
-      }}
-      validationSchema={Yup.object().shape({
+      initialValues={{ name: '', email: '', message: '', recaptcha: '' }}
+      validationSchema={Yup.object({
         name: Yup.string().required('Full name field is required'),
         email: Yup.string().email('Invalid email').required('Email field is required'),
         message: Yup.string().required('Message field is required'),
         recaptcha:
-          process.env.NODE_ENV !== 'development' ? Yup.string().required('Robots are not welcome yet!') : Yup.string(),
+          process.env.NODE_ENV !== 'development'
+            ? Yup.string().required('Robots are not welcome yet!')
+            : Yup.string(),
       })}
-      onSubmit={async ({ name, email, message }, { setSubmitting, resetForm, setFieldError }) => {
+      onSubmit={async (values, helpers) => {
         try {
-          await handleSubmit({
-            name,
-            email,
-            message,
-          });
-
-          setTimeout(() => resetForm(), 4000);
-        } catch (err) {
+          await handleSubmit(values);
+          helpers.resetForm();
+        } catch {
           alert('Something went wrong, please try again!');
         } finally {
-          if (state.errors) {
-            state.errors.getFormErrors().forEach((error) => {
-              setFieldError('email', error.message);
-            });
-
-            state.errors.getAllFieldErrors().forEach(([field, fieldErrors]) => {
-              fieldErrors.forEach((fieldError) => {
-                setFieldError(field, fieldError.message);
-              });
-            });
-          }
-          setSubmitting(false);
+          helpers.setSubmitting(false);
         }
       }}
     >
-      {({ values, touched, errors, setFieldValue, isSubmitting }) => (
+      {({ touched, errors, setFieldValue, isSubmitting, values }) => (
         <Form>
+          {/* --- Name --- */}
           <div className="relative mb-4">
-            <FastField
+            <Field
               type="text"
               name="name"
-              component="input"
-              aria-label="name"
               placeholder="Full name*"
-              className={clsx('input', {
-                'input-error': touched.name && errors.name,
-              })}
+              className={clsx('input', { 'input-error': touched.name && errors.name })}
             />
             <ErrorMessage className="text-red-600 block mt-1" component="span" name="name" />
           </div>
+
+          {/* --- Email --- */}
           <div className="relative mb-4">
-            <FastField
-              id="email"
-              aria-label="email"
-              component="input"
+            <Field
               type="email"
               name="email"
               placeholder="Email*"
-              className={clsx('input', {
-                'input-error': touched.email && errors.email,
-              })}
+              className={clsx('input', { 'input-error': touched.email && errors.email })}
             />
             <ErrorMessage className="text-red-600 block mt-1" component="span" name="email" />
           </div>
+
+          {/* --- Message --- */}
           <div className="relative mb-4">
-            <FastField
-              component="textarea"
-              aria-label="message"
-              id="message"
-              rows="8"
-              type="text"
+            <Field
+              as="textarea"
+              rows={8}
               name="message"
               placeholder="Message*"
-              className={clsx('input', {
-                'input-error': touched.message && errors.message,
-              })}
+              className={clsx('input', { 'input-error': touched.message && errors.message })}
             />
             <ErrorMessage className="text-red-600 block mt-1" component="span" name="message" />
           </div>
+
+          {/* --- ReCAPTCHA --- */}
           {values.name && values.email && values.message && process.env.NODE_ENV !== 'development' && (
             <div className="relative mb-4">
-              <FastField
-                component={Recaptcha}
-                sitekey={process.env.NEXT_PUBLIC_PORTFOLIO_RECAPTCHA_KEY}
-                name="recaptcha"
-                onChange={(value: string) => setFieldValue('recaptcha', value)}
+              <ReCAPTCHA
+                sitekey={process.env.NEXT_PUBLIC_PORTFOLIO_RECAPTCHA_KEY!}
+                onChange={(token) => setFieldValue('recaptcha', token)}
               />
               <ErrorMessage className="text-red-600 block mt-1" component="span" name="recaptcha" />
             </div>
           )}
+
+          {/* --- Success message --- */}
           {state.succeeded && (
-            <div className="relative mb-4">
-              <div className="text-center">
-                <h4 className="font-normal">Your message has been successfully sent, I will get back to you ASAP!</h4>
-              </div>
-            </div>
+            <p className="my-4 text-center text-green-500">
+              Your message has been successfully sent, I’ll get back to you ASAP!
+            </p>
           )}
-          <div className="text-left">
-            <button type="submit" className="button button-secondary" disabled={isSubmitting}>
-              Submit
-            </button>
-          </div>
+
+          {/* --- Submit --- */}
+          <button type="submit" className="button button-secondary" disabled={isSubmitting}>
+            Submit
+          </button>
         </Form>
       )}
     </Formik>

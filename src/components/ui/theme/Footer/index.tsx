@@ -1,43 +1,73 @@
-import Image from 'next/image';
-import social from './social.json';
+import { Mail, Linkedin, Github, BookOpen } from "lucide-react";
+import React from "react";
 
-const Footer = () => (
-  <div className="pt-56 pb-16 bg-[url('/assets/illustrations/footer.svg')] bg-cover bg-top bg-no-repeat">
-    <div className="container flex items-center md:items-end text-center md:text-left justify-between flex-col md:flex-row">
-      <div className="mb-8 md:mb-0">
-        <h2 className="text-brand-primary min-[2170px]:dark:text-white font-bold text-2xl mb-4">John Doe</h2>
-        <span className="text-brand-primary min-[2170px]:dark:text-white">
-          © All rights are reserved | {new Date().getFullYear()} | Made with{' '}
-          <span aria-label="love" role="img">
-            💖
-          </span>{' '}
-          by{' '}
+/**
+ * Terminal‑style footer for gauravraut.com
+ * --------------------------------------------------
+ * – Dark background, green mono‑spaced text (classic shell look)
+ * – Icons: Email, LinkedIn, GitHub, Google Scholar (book icon)
+ * – Each icon vertically stacked with label (Email me, LinkedIn, GitHub, Scholar)
+ * --------------------------------------------------
+ */
+const Footer: React.FC = () => {
+  const linkClass = "flex flex-col items-center transition hover:text-green-200";
+
+  return (
+    <footer className="bg-black py-6 text-green-400">
+      <div className="container mx-auto flex flex-col items-center space-y-4">
+        {/* Icon row */}
+        <div className="flex space-x-8">
           <a
-            href="https://smakosh.com/?ref=portfolio-dev"
-            rel="noopener noreferrer"
-            target="_blank"
-            className="text-brand-primary min-[2170px]:dark:text-white"
+            href="mailto:gauraut14@gmail.com"
+            aria-label="Email me"
+            className={linkClass}
           >
-            Smakosh
+            <Mail className="h-6 w-6" />
+            <span className="font-mono text-xs pt-1">Email&nbsp;me</span>
           </a>
-        </span>
-      </div>
-      <div className="flex items-center">
-        {social.map(({ id, name, link, icon }) => (
+
           <a
-            key={id}
-            href={link}
+            href="https://www.linkedin.com/in/gauraut"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`follow me on ${name}`}
-            className="mr-2 last:mr-0"
+            aria-label="LinkedIn"
+            className={linkClass}
           >
-            <Image src={icon} alt={name} className="w-6 h-6" width={24} height={24} />
+            <Linkedin className="h-6 w-6" />
+            <span className="font-mono text-xs pt-1">LinkedIn</span>
           </a>
-        ))}
+
+          <a
+            href="https://github.com/gauraut"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className={linkClass}
+          >
+            <Github className="h-6 w-6" />
+            <span className="font-mono text-xs pt-1">GitHub</span>
+          </a>
+
+          <a
+            href="https://scholar.google.com/citations?user=agHWQhEAAAAJ"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Google Scholar"
+            className={linkClass}
+          >
+            <BookOpen className="h-6 w-6" />
+            <span className="font-mono text-xs pt-1">Scholar</span>
+          </a>
+        </div>
+
+        {/* Name with terminal prompt */}
+        <p className="font-mono text-sm">
+          <span className="select-none">&gt;</span> Gaurav&nbsp;Raut
+          <span className="animate-pulse">_</span>
+        </p>
       </div>
-    </div>
-  </div>
-);
+    </footer>
+  );
+};
 
 export default Footer;

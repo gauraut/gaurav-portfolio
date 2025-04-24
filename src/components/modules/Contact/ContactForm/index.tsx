@@ -2,15 +2,32 @@
 
 import { useForm } from '@formspree/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import dynamic from 'next/dynamic';
 import * as Yup from 'yup';
+import dynamic from 'next/dynamic';
 import clsx from 'clsx';
 
-// 👉 dynamic import prevents SSR errors
+// --- Lazy‑load reCAPTCHA only on the client (avoids hydration errors) ---
 const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), { ssr: false });
 
-const ContactForm = () => {
-  const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORM!);
+/**
+ * Contact form (Formik + Formspree + reCAPTCHA v2/v3)
+ * --------------------------------------------------
+ * 1. Validates name, email, message, and captcha (prod only)
+ * 2. Sends the DOM <form> event directly to Formspree's hook
+ * 3. Shows success banner on state.succeeded
+ * --------------------------------------------------
+ * Env vars required:
+ *   NEXT_PUBLIC_FORM_ID         – just the Formspree ID (e.g. "xovernjb")
+ *   NEXT_PUBLIC_RECAPTCHA_KEY   – your Google reCAPTCHA site key
+ */
+export default function ContactForm() {
+  const formId = process.env.NEXT_PUBLIC_FORM_ID;
+
+  if (!formId) {
+    throw new Error('Missing NEXT_PUBLIC_FORM_ID – add it to .env.local and Vercel env');
+  }
+
+  const [state, handleSubmit] = useForm(formId);
 
   return (
     <Formik
@@ -24,28 +41,21 @@ const ContactForm = () => {
             ? Yup.string().required('Robots are not welcome yet!')
             : Yup.string(),
       })}
-      onSubmit={async (values, helpers) => {
-        try {
-          await handleSubmit(values);
-          helpers.resetForm();
-        } catch {
-          alert('Something went wrong, please try again!');
-        } finally {
-          helpers.setSubmitting(false);
-        }
-      }}
+      onSubmit={() => {/* Formspree handles submission via the DOM event */}}
     >
-      {({ touched, errors, setFieldValue, isSubmitting, values }) => (
-        <Form>
-          {/* --- Name --- */}
+      {({ values, touched, errors, setFieldValue }) => (
+        /* hand the DOM event straight to Formspree */
+        <Form onSubmit={handleSubmit} noValidate>
+          {/* --- Full name --- */}
           <div className="relative mb-4">
             <Field
               type="text"
               name="name"
               placeholder="Full name*"
+              aria-label="Full name"
               className={clsx('input', { 'input-error': touched.name && errors.name })}
             />
-            <ErrorMessage className="text-red-600 block mt-1" component="span" name="name" />
+            <ErrorMessage component="span" name="name" className="text-red-600 block mt-1" />
           </div>
 
           {/* --- Email --- */}
@@ -54,9 +64,10 @@ const ContactForm = () => {
               type="email"
               name="email"
               placeholder="Email*"
+              aria-label="Email address"
               className={clsx('input', { 'input-error': touched.email && errors.email })}
             />
-            <ErrorMessage className="text-red-600 block mt-1" component="span" name="email" />
+            <ErrorMessage component="span" name="email" className="text-red-600 block mt-1" />
           </div>
 
           {/* --- Message --- */}
@@ -66,37 +77,36 @@ const ContactForm = () => {
               rows={8}
               name="message"
               placeholder="Message*"
+              aria-label="Message"
               className={clsx('input', { 'input-error': touched.message && errors.message })}
             />
-            <ErrorMessage className="text-red-600 block mt-1" component="span" name="message" />
+            <ErrorMessage component="span" name="message" className="text-red-600 block mt-1" />
           </div>
 
-          {/* --- ReCAPTCHA --- */}
+          {/* --- reCAPTCHA (only after all fields filled) --- */}
           {values.name && values.email && values.message && process.env.NODE_ENV !== 'development' && (
             <div className="relative mb-4">
               <ReCAPTCHA
-                sitekey={process.env.NEXT_PUBLIC_PORTFOLIO_RECAPTCHA_KEY!}
-                onChange={(token) => setFieldValue('recaptcha', token)}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_KEY!}
+                onChange={(token: string | null) => setFieldValue('recaptcha', token)}
               />
-              <ErrorMessage className="text-red-600 block mt-1" component="span" name="recaptcha" />
+              <ErrorMessage component="span" name="recaptcha" className="text-red-600 block mt-1" />
             </div>
           )}
 
-          {/* --- Success message --- */}
+          {/* --- Success banner --- */}
           {state.succeeded && (
             <p className="my-4 text-center text-green-500">
               Your message has been successfully sent, I’ll get back to you ASAP!
             </p>
           )}
 
-          {/* --- Submit --- */}
-          <button type="submit" className="button button-secondary" disabled={isSubmitting}>
+          {/* --- Submit button --- */}
+          <button type="submit" className="button button-secondary" disabled={state.submitting}>
             Submit
           </button>
         </Form>
       )}
     </Formik>
   );
-};
-
-export default ContactForm;
+}
